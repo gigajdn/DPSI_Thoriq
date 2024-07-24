@@ -13,6 +13,11 @@ app.use('/api/akun', akunRoutes);
 app.use('/api/produk', produkRoutes);
 app.use('/api/pesanan', pesananRoutes);
 
+// Default route
+app.get('/', (req, res) => {
+  res.send('Welcome to API Shop System');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
