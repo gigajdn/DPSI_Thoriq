@@ -12,9 +12,9 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const akun = await Akun.login(username, password);
+    const akun = await Akun.login(email, password);
     const token = jwt.sign({ id_akun: akun.id_akun, role: akun.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.status(200).send({ message: 'Login successful', token });
   } catch (error) {

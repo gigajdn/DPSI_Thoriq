@@ -33,16 +33,16 @@ class Akun {
     }
   }
 
-  static async login(username, password) {
+  static async login(email, password) {
     try {
-      const snapshot = await collectionRef.doc('akun').collection('data').where('username', '==', username).get();
+      const snapshot = await collectionRef.doc('akun').collection('data').where('email', '==', email).get();
       if (snapshot.empty) {
-        throw new Error('Invalid username or password');
+        throw new Error('Invalid email or password');
       }
       const akun = snapshot.docs[0].data();
       const isMatch = await bcrypt.compare(password, akun.password);
       if (!isMatch) {
-        throw new Error('Invalid username or password');
+        throw new Error('Invalid email or password');
       }
       return akun;
     } catch (error) {
