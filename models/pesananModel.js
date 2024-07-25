@@ -23,11 +23,11 @@ class Pesanan {
 
   static async getPesananById(id) {
     try {
-      const doc = await collectionRef.doc('pesanan').collection('data').doc(id).get();
-      if (!doc.exists) {
+      const doc = await collectionRef.doc('pesanan').collection('data').where('id_pesanan', '==', id).get();
+      if (doc.empty) {
         throw new Error('Pesanan not found');
       }
-      return new Pesanan(doc.data());
+      return new Pesanan(doc.docs[0].data());
     } catch (error) {
       throw new Error('Error getting pesanan: ' + error.message);
     }
