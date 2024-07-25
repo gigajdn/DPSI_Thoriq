@@ -22,11 +22,11 @@ class Produk {
 
   static async getProdukById(id) {
     try {
-      const doc = await collectionRef.doc('produk').collection('data').doc(id).get();
-      if (!doc.exists) {
+      const doc = await collectionRef.doc('produk').collection('data').where('id_produk', '==', id).get();
+      if (doc.empty) {
         throw new Error('Produk not found');
       }
-      return new Produk(doc.data());
+      return new Produk(doc.docs[0].data());
     } catch (error) {
       throw new Error('Error getting produk: ' + error.message);
     }
