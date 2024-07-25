@@ -34,21 +34,57 @@ class Produk {
 
   static async updateProduk(id, updatedData) {
     try {
-      await collectionRef.doc('produk').collection('data').doc(id).update(updatedData);
+      console.log('Starting update for produk with ID:', id);
+
+      const querySnapshot = await collectionRef
+        .doc('produk')
+        .collection('data')
+        .where('id_produk', '==', id)
+        .get();
+
+      if (querySnapshot.empty) {
+        throw new Error(`Produk with ID: ${id} not found`);
+      }
+
+      const docRef = querySnapshot.docs[0].ref;
+      console.log('Document reference found:', docRef.path);
+
+      await docRef.update(updatedData);
+      console.log('Produk updated successfully:', id);
+
       return `Produk with ID: ${id} updated successfully`;
     } catch (error) {
+      console.error('Error updating produk:', error.message);
       throw new Error('Error updating produk: ' + error.message);
     }
   }
 
+
   static async deleteProduk(id) {
     try {
-      await collectionRef.doc('produk').collection('data').doc(id).delete();
+      const querySnapshot = await collectionRef
+        .doc('produk')
+        .collection('data')
+        .where('id_produk', '==', id)
+        .get();
+
+      if (querySnapshot.empty) {
+        throw new Error(`Produk with ID: ${id} not found`);
+      }
+
+      const batch = collectionRef.firestore.batch(); // Create a batch for deleting multiple documents
+      querySnapshot.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+
+      await batch.commit(); // Commit the batch
+
       return `Produk with ID: ${id} deleted successfully`;
     } catch (error) {
       throw new Error('Error deleting produk: ' + error.message);
     }
   }
 }
+
 
 module.exports = Produk;
